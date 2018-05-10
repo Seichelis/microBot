@@ -86,6 +86,7 @@ function mastyk() {
         s22 = 0
         return;
     }
+    //THIS PART IS NOT GOOD
     s11 = 1
     s12 = 0
     s21 = 1
