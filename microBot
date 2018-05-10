@@ -1,0 +1,110 @@
+let s22 = 0
+let p22 = 0
+let p21 = 0
+let s21 = 0
+let p12 = 0
+let s12 = 0
+let p11 = 0
+let s11 = 0
+let start = false
+input.onButtonPressed(Button.B, () => {
+    start = false
+    s11 = 0
+    s12 = 0
+    s21 = 0
+    s22 = 0
+})
+function write() {
+    pins.digitalWritePin(DigitalPin.P16, s11)
+    pins.digitalWritePin(DigitalPin.P12, s12)
+    pins.digitalWritePin(DigitalPin.P0, s21)
+    pins.digitalWritePin(DigitalPin.P8, s22)
+}
+function read() {
+    if (pins.analogReadPin(AnalogPin.P10) > 400) {
+        p11 = 0
+    } else {
+        p11 = 1
+    }
+    if (pins.analogReadPin(AnalogPin.P1) > 400) {
+        p12 = 0
+    } else {
+        p12 = 1
+    }
+    if (pins.analogReadPin(AnalogPin.P2) > 400) {
+        p21 = 0
+    } else {
+        p21 = 1
+    }
+    if (pins.analogReadPin(AnalogPin.P3) > 400) {
+        p22 = 0
+    } else {
+        p22 = 1
+    }
+}
+input.onButtonPressed(Button.A, () => {
+    start = true
+})
+function mastyk() {
+    // 1 desinen
+    if (p11 == 1 && p12 == 0 && p21 == 1 && p22 == 1) {
+        s11 = 1
+        s12 = 0
+        s21 = 0
+        s22 = 0
+        return;
+    }
+    // 2, 3 desine + reversas
+    if (p11 == 0 && p21 == 1 && p22 == 1 || p11 == 0 && p12 == 0 && p21 == 1 && p22 == 0) {
+        s11 = 1
+        s12 = 0
+        s21 = 0
+        s22 = 1
+        return;
+    }
+    // 4 kaire
+    if (p11 == 1 && p12 == 1 && p21 == 0 && p22 == 1) {
+        s11 = 0
+        s12 = 0
+        s21 = 1
+        s22 = 0
+        return;
+    }
+    // 5, 6 kaire + reversas
+    if (p11 == 1 && p12 == 1 && p22 == 0 || p11 == 0 && p12 == 1 && p21 == 0 && p22 == 0) {
+        s11 = 0
+        s12 = 1
+        s21 = 1
+        s22 = 0
+        return;
+    }
+    // 9 start stop
+    if (p11 == 0 && p12 == 1 && p21 == 1 && p22 == 0) {
+        s11 = 0
+        s12 = 0
+        s21 = 0
+        s22 = 0
+        return;
+    }
+    s11 = 1
+    s12 = 0
+    s21 = 1
+    s22 = 0
+    return;
+}
+s11 = 0
+s12 = 0
+s21 = 0
+s22 = 0
+pins.digitalWritePin(DigitalPin.P4, 1)
+pins.digitalWritePin(DigitalPin.P16, 1)
+pins.digitalWritePin(DigitalPin.P0, 1)
+pins.digitalWritePin(DigitalPin.P8, 1)
+start = false
+basic.forever(() => {
+    while (start) {
+        read()
+        mastyk()
+        write()
+    }
+})
