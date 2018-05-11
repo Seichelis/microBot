@@ -1,5 +1,6 @@
 let atmKr = false
 let atmDr = false
+let atmTs = false
 let s22 = 0
 let p22 = 0
 let p21 = 0
@@ -51,13 +52,33 @@ input.onButtonPressed(Button.A, () => {
     stat = 1
 })
 function mastyk() {
+    //atsaukiam sankryzos rezima jei tik 1 juodas
+    if (atmTs &&
+        (p11 == 0 && p12 == 1 && p21 == 1 && p22 == 1 ||
+            p11 == 1 && p12 == 0 && p21 == 1 && p22 == 1 ||
+            p11 == 1 && p12 == 1 && p21 == 0 && p22 == 1 ||
+            p11 == 1 && p12 == 1 && p21 == 1 && p22 == 0)) {
+        atmTs = false
+    }
+    // pirmyn (sankryza)
+    if (p11 == 0 && p12 == 0 && p21 == 0 && p22 == 0 || atmTs ) {
+        s11 = 1
+        s12 = 0
+        s21 = 1
+        s22 = 0
+        atmKr = false
+        atmDr = false
+        // po sankryzos varyti tiesiai kol liks 1
+            atmTs= true
+        return;
+    }
     // 1 desinen
     if (p11 == 1 && p12 == 0 && p21 == 1 && p22 == 1) {
         s11 = 1
         s12 = 0
         s21 = 0
         s22 = 0
-        atmDr = false
+        atmKr = false
         return;
     }
     // 4 kairen
@@ -66,7 +87,7 @@ function mastyk() {
         s12 = 0
         s21 = 1
         s22 = 0
-        atmKr = false
+        atmDr = false
         return;
     }
     // 2, 3 desine + reversas
@@ -75,7 +96,7 @@ function mastyk() {
         s12 = 0
         s21 = 0
         s22 = 1
-        if (p11 == 0 && p12 == 0 && p21 == 0 && p22 == 1) {
+        if (p11 == 0 && p12 == 0 && p22 == 1) {
             atmDr = true
         }
         return;
@@ -86,7 +107,7 @@ function mastyk() {
         s12 = 1
         s21 = 1
         s22 = 0
-        if (p11 == 1 && p12 == 0 && p21 == 0 && p22 == 0) {
+        if (p11 == 1 && p21 == 0 && p22 == 0) {
             atmKr = true
         }
         return;
@@ -101,9 +122,9 @@ function mastyk() {
     }
     // 9 start stop
     if (p11 == 0 && p12 == 1 && p21 == 1 && p22 == 0) {
-        s11 = 0
+        s11 = 1
         s12 = 0
-        s21 = 0
+        s21 = 1
         s22 = 0
         stat = stat + 1
         return;
